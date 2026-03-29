@@ -5,11 +5,11 @@ minimal_mistakes_skin: "air" # "default" # "air", "aqua", "contrast", "dark", "d
 
 # Site Settings
 locale: "zh-CN"
-title: "我的个人博客"
+title: "sonetto's home"
 title_separator: "-"
 subtitle: # site tagline that appears below site title in masthead
-name: "你的名字"
-description: "分享学习笔记和技术思考"
+name: "sonetto"
+description: "Die Eule von Minerva beginnt erst, mit dem Gehen der Sonne zu fliegen"
 url: "https://wqxzqhqq.github.io" # the base hostname & protocol for your site
 baseurl: "/blog" # the subpath of your site
 repository: # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
