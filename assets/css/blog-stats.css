@@ -1,0 +1,40 @@
+/* 博客统计样式 */
+.blog-stats {
+    margin-top: 2em;
+    padding: 1em;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+.blog-stats__title {
+    margin-top: 0;
+    margin-bottom: 1em;
+    font-size: 1.1em;
+    color: #333;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 0.5em;
+}
+.blog-stats__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.blog-stats__item {
+    margin-bottom: 0.8em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px dashed #dee2e6;
+}
+.blog-stats__item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+.blog-stats__label {
+    font-weight: bold;
+    color: #555;
+    min-width: 80px;
+    display: inline-block;
+}
+.blog-stats__value {
+    color: #007bff;
+}
