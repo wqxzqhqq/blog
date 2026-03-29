@@ -106,11 +106,11 @@ analytics:
 
 # Site Author
 author:
-  name: "你的名字"
+  name: "sonetto"
   # avatar: # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio: "技术爱好者"
-  location: "所在地"
-  email: ""
+  bio: "Die Eule von Minerva beginnt erst, mit dem Gehen der Sonne zu fliegen"
+  location: "广州"
+  email: "wqxz1619154407@gmail.com"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
