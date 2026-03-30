@@ -1,203 +1,106 @@
-{% comment %}博客统计组件 - 优化版{% endcomment %}
-
 {% assign total_posts = site.posts | size %}
-{% assign latest_post = site.posts | sort: 'date' | last %}
+{% assign sorted_posts = site.posts | sort: "date" %}
+{% assign first_post = sorted_posts | first %}
+{% assign latest_post = sorted_posts | last %}
 
-{% comment %}计算总字数{% endcomment %}
 {% assign total_words = 0 %}
 {% for post in site.posts %}
-    {% assign content0 = post.content | strip_html %}
-    {% assign content_size = content0 | size | minus: 1 %}
-    {% assign pre_is_letter = false %}
-    {% assign words = 0 %}
+  {% assign content0 = post.content | strip_html %}
+  {% assign content_size = content0 | size | minus: 1 %}
+  {% assign pre_is_letter = false %}
+  {% assign words = 0 %}
+  {% if content_size >= 0 %}
     {% for i in (0..content_size) %}
-        {% assign character = content0 | slice: i %}
-        {% case character %}
-            {% when "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" %}
-                {% assign pre_is_letter = true %}
-            {% when "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" %}
-                {% assign pre_is_letter = true %}
-            {% when "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" %}
-                {% assign pre_is_letter = true %}
-            {% when " ", "\t", "\r", "\n", "!", ".", "?", ",", "！", "。", "？", "，", "/", "、", "：", ":", "(", "（", ")", "）", "；", ";", "_", "—", "-" %}
-                {% if pre_is_letter %}
-                    {% assign words = words | plus: 1 %}
-                {% endif %}
-                {% assign pre_is_letter = false %}
-            {% else %}
-                {% if pre_is_letter %}
-                    {% assign words = words | plus: 1 %}
-                {% endif %}
-                {% assign pre_is_letter = false %}
-                {% assign words = words | plus: 1 %}
-        {% endcase %}
+      {% assign character = content0 | slice: i %}
+      {% case character %}
+        {% when "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" %}
+          {% assign pre_is_letter = true %}
+        {% when "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" %}
+          {% assign pre_is_letter = true %}
+        {% when "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" %}
+          {% assign pre_is_letter = true %}
+        {% when " ", "\t", "\r", "\n", "!", ".", "?", ",", "！", "。", "？", "，", "/", "、", "：", ":", "(", "（", ")", "）", "；", ";", "_", "—", "-" %}
+          {% if pre_is_letter %}
+            {% assign words = words | plus: 1 %}
+          {% endif %}
+          {% assign pre_is_letter = false %}
+        {% else %}
+          {% if pre_is_letter %}
+            {% assign words = words | plus: 1 %}
+          {% endif %}
+          {% assign pre_is_letter = false %}
+          {% assign words = words | plus: 1 %}
+      {% endcase %}
     {% endfor %}
-    {% assign total_words = total_words | plus: words %}
+  {% endif %}
+  {% assign total_words = total_words | plus: words %}
 {% endfor %}
 
-{% comment %}计算运营时长（使用英文缩写）{% endcomment %}
-{% if site.blog_start_date %}
-    {% assign start_date = site.blog_start_date | date: "%s" %}
-    {% assign current_date = "now" | date: "%s" %}
-    {% assign diff_seconds = current_date | minus: start_date %}
-    {% assign diff_days = diff_seconds | divided_by: 86400 %}
-    {% assign years = diff_days | divided_by: 365 %}
-    {% assign months = diff_days | modulo: 365 | divided_by: 30 %}
-    {% assign days = diff_days | modulo: 365 | modulo: 30 %}
+{% assign now_ts = "now" | date: "%s" %}
+
+{% assign uptime_years = 0 %}
+{% assign uptime_days_left = 0 %}
+{% if first_post %}
+  {% assign first_ts = first_post.date | date: "%s" %}
+  {% assign uptime_seconds = now_ts | minus: first_ts %}
+  {% assign uptime_days = uptime_seconds | divided_by: 86400 %}
+  {% assign uptime_years = uptime_days | divided_by: 365 %}
+  {% assign uptime_days_left = uptime_days | modulo: 365 %}
 {% endif %}
 
-<div class="blog-stats-wrapper">
-<h3 class="blog-stats-title">Blog Stats</h3>
+{% assign since_update_days = 0 %}
+{% assign since_update_hours = 0 %}
+{% if latest_post %}
+  {% assign latest_ts = latest_post.date | date: "%s" %}
+  {% assign updated_seconds = now_ts | minus: latest_ts %}
+  {% assign updated_hours = updated_seconds | divided_by: 3600 %}
+  {% assign since_update_days = updated_hours | divided_by: 24 %}
+  {% assign since_update_hours = updated_hours | modulo: 24 %}
+{% endif %}
 
-<div class="blog-stats-grid">
-    <div class="blog-stats-column">
-        {% if site.blog_start_date %}
-        <div class="blog-stats-label">Time</div>
-        <div class="blog-stats-value">
-            {% if years > 0 %}{{ years }}y{% endif %}
-            {% if months > 0 %}{{ months }}m{% endif %}
-            {% if days > 0 %}{{ days }}d{% endif %}
-        </div>
-        {% endif %}
+{% assign uptime_display = "0d" %}
+{% if total_posts > 0 %}
+  {% if uptime_years > 0 %}
+    {% assign uptime_display = uptime_years | append: "y" %}
+  {% else %}
+    {% assign uptime_display = uptime_days_left | append: "d" %}
+  {% endif %}
+{% endif %}
+
+{% assign last_display = "--" %}
+{% if latest_post %}
+  {% if since_update_days > 0 %}
+    {% assign last_display = since_update_days | append: "d" %}
+  {% else %}
+    {% assign last_display = since_update_hours | append: "h" %}
+  {% endif %}
+{% endif %}
+
+{% assign words_display = total_words %}
+{% if total_words >= 1000000 %}
+  {% assign words_display = total_words | divided_by: 1000000.0 | round: 1 | append: "m" %}
+{% elsif total_words >= 1000 %}
+  {% assign words_display = total_words | divided_by: 1000.0 | round: 1 | append: "k" %}
+{% else %}
+  {% assign words_display = total_words %}
+{% endif %}
+
+<section class="blog-stats" aria-label="Blog stats">
+  <div class="blog-stats__title-wrap">
+    <span class="blog-stats__title">Blog Stats</span>
+  </div>
+  <div class="blog-stats__card">
+    <div class="blog-stats__item">
+      <span class="blog-stats__label">Time</span>
+      <span class="blog-stats__value">{{ uptime_display }}</span>
     </div>
-
-    <div class="blog-stats-column">
-        {% if latest_post %}
-        <div class="blog-stats-label">Last</div>
-        <div class="blog-stats-value">
-            {{ latest_post.date | date: "%Y-%m-%d" }}
-        </div>
-        {% endif %}
+    <div class="blog-stats__item">
+      <span class="blog-stats__label">Last</span>
+      <span class="blog-stats__value">{{ last_display }}</span>
     </div>
-
-    <div class="blog-stats-column">
-        <div class="blog-stats-label">Words</div>
-        <div class="blog-stats-value">
-            {% if total_words < 1000 %}
-                {{ total_words }}
-            {% else %}
-                {% assign total_words_k = total_words | divided_by: 1000.0 | round: 1 %}
-                {{ total_words_k }}k
-            {% endif %}
-        </div>
+    <div class="blog-stats__item">
+      <span class="blog-stats__label">Words</span>
+      <span class="blog-stats__value">{{ words_display }}</span>
     </div>
-</div>
-</div>
-
-<style type="text/css">
-/* 导入华丽花体字体 */
-@import url('https://fonts.loli.net/css2?family=Pacifico&family=Lobster&family=Cedarville+Cursive&family=Homemade+Apple&family=Dancing+Script:wght@700&display=swap');
-
-.blog-stats-wrapper {
-    /* 仅作为包装器，无样式 */
-}
-
-.blog-stats-title {
-    margin: 1.5em 0 0.8em 0;
-    font-size: 1.5em;
-    color: #2d3748;
-    font-weight: 700;
-    letter-spacing: 2px;
-    font-family: "Monotype Corsiva", "Edwardian Script ITC", "Lucida Handwriting", "Brush Script MT", "Apple Chancery", "Pacifico", "Lobster", "Cedarville Cursive", cursive;
-    text-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
-    font-style: italic;
-    border-bottom: 3px double #c0c8d8;
-    padding-bottom: 0.5em;
-    text-align: center;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    padding: 0.8em;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-}
-
-.blog-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.8em;
-    margin: 1.5em 0 2em 0;
-}
-
-.blog-stats-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.blog-stats-label {
-    font-size: 0.85em;
-    color: #718096;
-    font-weight: 600;
-    margin-bottom: 0.6em;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-family: "Monotype Corsiva", "Edwardian Script ITC", "Lucida Handwriting", "Brush Script MT", "Apple Chancery", "Pacifico", "Lobster", "Cedarville Cursive", cursive;
-    font-style: italic;
-    padding: 0.3em 0.6em;
-    background: #f8f9fa;
-    border-radius: 20px;
-    border: 1px dashed #d0d7e2;
-}
-
-.blog-stats-value {
-    font-size: 1.2em;
-    color: #0092ca;
-    font-weight: 700;
-    padding: 0.6em 0.9em;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
-    border-radius: 12px;
-    border: 2px solid #e0e6ed;
-    min-width: 80px;
-    font-family: "Monotype Corsiva", "Edwardian Script ITC", "Lucida Handwriting", "Brush Script MT", "Apple Chancery", "Pacifico", "Lobster", "Cedarville Cursive", cursive;
-    font-style: italic;
-    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-}
-
-/* 悬停效果 */
-.blog-stats-value:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    background: linear-gradient(135deg, #ffffff 0%, #e6f7ff 100%);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .blog-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5em;
-    }
-
-    .blog-stats-column:nth-child(3) {
-        grid-column: span 2;
-        max-width: 60%;
-    }
-
-    .blog-stats-title {
-        font-size: 1.3em;
-        padding: 0.6em;
-    }
-}
-
-@media (max-width: 480px) {
-    .blog-stats-grid {
-        grid-template-columns: 1fr;
-        gap: 1.2em;
-    }
-
-    .blog-stats-column:nth-child(3) {
-        grid-column: span 1;
-        max-width: 100%;
-    }
-
-    .blog-stats-value {
-        font-size: 1.1em;
-        padding: 0.5em 0.7em;
-    }
-
-    .blog-stats-title {
-        font-size: 1.2em;
-        letter-spacing: 1px;
-    }
-}
-</style>
+  </div>
+</section>

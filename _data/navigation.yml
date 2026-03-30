@@ -6,6 +6,8 @@ main:
     url: /tags/
   - title: "Categories"
     url: /categories/
+  - title: "Moments"
+    url: /moments/
   - title: "About Me"
     url: /about/
   - title: "Friends"
