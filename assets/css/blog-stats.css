@@ -97,7 +97,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
-  padding: 0.68rem 0.6rem;
+  padding: 0.68rem 0.42rem;
   border-radius: 18px;
   border: 1px solid #d3d9e2;
   background: rgba(238, 241, 246, 0.96);
@@ -110,6 +110,10 @@
   min-width: 0;
   text-align: center;
   padding: 0.16rem 0.18rem;
+}
+
+.blog-stats__item:first-child {
+  padding-left: 0;
 }
 
 .blog-stats__item + .blog-stats__item {
