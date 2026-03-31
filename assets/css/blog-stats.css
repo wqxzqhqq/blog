@@ -2,20 +2,75 @@
   margin-top: 1rem;
 }
 
+.layout--home #main {
+  margin-top: 0.8rem;
+}
+
+@media (min-width: 64em) {
+  .layout--home .sidebar {
+    padding-right: 1.2rem;
+  }
+
+  .layout--home .archive {
+    padding-left: 0.9rem;
+  }
+}
+
 .sidebar .author__name,
 .sidebar .author__name a {
   font-family: "Parisienne Local", "Parisienne", "Snell Roundhand", "Apple Chancery", cursive !important;
-  font-size: 2rem;
+  font-size: 1.88rem;
   font-weight: 400 !important;
-  color: #b0282f !important;
-  letter-spacing: 0.01em;
+  color: #aa4a55 !important;
+  letter-spacing: 0.005em;
   text-transform: none;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
 }
 
+.sidebar .author__name {
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(170, 74, 85, 0.4);
+}
+
 .sidebar .author__name a:hover {
-  color: #8f1f26 !important;
+  color: #94404a !important;
+}
+
+.sidebar .author__bio {
+  position: relative;
+  margin-top: 2rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+}
+
+.sidebar .author__bio::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(176, 40, 47, 0.72);
+}
+
+.sidebar .author__bio::after {
+  content: none;
+}
+
+.sidebar .author__bio p {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.18rem;
+  line-height: 1.56;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.006em;
+  color: #667082;
+  text-wrap: pretty;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  max-width: 15.8ch;
 }
 
 .blog-stats__title-wrap {
@@ -29,8 +84,8 @@
   line-height: 0.92 !important;
   font-weight: 400 !important;
   font-family: "Mea Culpa Local", "Mea Culpa", "Snell Roundhand", "Apple Chancery", cursive !important;
-  color: #0f3f8c !important;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45), 0 0.5px 0 rgba(8, 32, 74, 0.35);
+  color: #aa4a55 !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4), 0 0.5px 0 rgba(122, 49, 60, 0.25);
   letter-spacing: 0.01em;
   text-transform: none !important;
   text-rendering: geometricPrecision;

@@ -76,6 +76,11 @@
   {% endif %}
 {% endif %}
 
+{% assign latest_post_iso = "" %}
+{% if latest_post %}
+  {% assign latest_post_iso = latest_post.date | date_to_xmlschema %}
+{% endif %}
+
 {% assign words_display = total_words %}
 {% if total_words >= 1000000 %}
   {% assign words_display = total_words | divided_by: 1000000.0 | round: 1 | append: "m" %}
@@ -96,7 +101,7 @@
     </div>
     <div class="blog-stats__item">
       <span class="blog-stats__label">Last</span>
-      <span class="blog-stats__value">{{ last_display }}</span>
+      <span class="blog-stats__value"{% if latest_post_iso != "" %} data-last-updated="{{ latest_post_iso }}"{% endif %}>{{ last_display }}</span>
     </div>
     <div class="blog-stats__item">
       <span class="blog-stats__label">Words</span>
@@ -104,3 +109,30 @@
     </div>
   </div>
 </section>
+
+<script>
+  (function () {
+    var root = document.querySelector(".blog-stats");
+    if (!root) return;
+
+    var stat = root.querySelector(".blog-stats__value[data-last-updated]");
+    if (!stat) return;
+
+    var updatedAt = stat.getAttribute("data-last-updated");
+    var updatedDate = new Date(updatedAt);
+    if (Number.isNaN(updatedDate.getTime())) return;
+
+    function renderLastUpdated() {
+      var diffMs = Date.now() - updatedDate.getTime();
+      if (diffMs < 0) diffMs = 0;
+
+      var diffHours = Math.floor(diffMs / 3600000);
+      var diffDays = Math.floor(diffHours / 24);
+
+      stat.textContent = diffDays > 0 ? diffDays + "d" : diffHours + "h";
+    }
+
+    renderLastUpdated();
+    window.setInterval(renderLastUpdated, 3600000);
+  })();
+</script>
