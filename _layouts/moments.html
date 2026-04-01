@@ -13,7 +13,6 @@ layout: archive
 
 {% if has_moments %}
   <section class="moments-page">
-    <h2 class="archive__subtitle">Moments</h2>
     <div class="moments-timeline">
       {% for post in site.posts %}
         {% assign post_categories_text = post.categories | join: "|" | downcase %}

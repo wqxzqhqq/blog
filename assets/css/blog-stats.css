@@ -74,7 +74,7 @@
 }
 
 .blog-stats__title-wrap {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
 }
 
 .blog-stats__title {
@@ -254,9 +254,9 @@
 .moments-timeline::before {
   content: "";
   position: absolute;
-  left: 115px;
-  top: 0.2rem;
-  bottom: 0.2rem;
+  left: calc(90px + 0.7rem + 12px - 1px);
+  top: 0;
+  bottom: 0;
   width: 2px;
   background: linear-gradient(180deg, rgba(108, 148, 214, 0.55), rgba(107, 184, 159, 0.45));
 }
